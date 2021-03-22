@@ -1,0 +1,20 @@
+name = "LASArrays"
+uuid = "abd1a5d4-3536-46cb-adf1-e806ca804503"
+authors = "Casey Ghilardi"
+version = "0.1.0"
+
+[deps]
+CoordinateTransformations = "150eb455-5306-5404-9cee-2592286d6298"
+FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+MappedArrays = "dbb5928d-eab1-5f90-85c2-b9b0edb7c900"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
+[compat]
+julia = "1.5"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
