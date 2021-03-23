@@ -113,14 +113,6 @@ function pointformat(io::Stream{format"LAS"})
     end
 end
 
-
-
-
-
-
-
-
-
 function load(f::File{format"LAS"}, field::Symbol)
     open(f) do s
         load(s, field)
@@ -134,7 +126,6 @@ function load(s::Stream{format"LAS"}, field::Symbol)
     if !(field in(fieldnames(format))) && field != :coordinates
         error("Field not part of LAS Point Data Records Format $format")
     elseif field == :coordinates
-        #coordinates = Array{Array{Int32}}(undef, records)
         coordinates = []
         transform = get_transform(s)
         seek(s, point_seek)
@@ -145,9 +136,9 @@ function load(s::Stream{format"LAS"}, field::Symbol)
         coordinates_mapped = mappedarray(transform, coordinates)
         return coordinates_mapped
     else
-        values = []
         offset = calculate_offset(format, field)
         width = format.types[findfirst(isequal(field), fieldnames(format))]
+        values = width[]
         seek(s, point_seek)
         while !eof(s)
             push!(values, read(s, width))
@@ -160,29 +151,5 @@ end
 function __init__()
      add_format(format"LAS", "LASF", ".las", [:LASArrays])
 end
-
-
-
-
-# function Base.read(f::String)
-#     io = open(f)
-#     read(io, UInt32) #skiplasf - sizeof(UInt32) = 4
-#     header = read(io, LasHeader)
-
-#     n = header.records_count
-#     #header
-#     points = []
-#     while !eof(io)
-#     push!(points,[read(io, Int32), read(io, Int32), read(io, Int32)])
-#     skip(io, 8)
-#     end
-# points
-# end
-
-export 
-pointformat,
-n_records
-
-
 
 end #end module
