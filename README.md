@@ -81,6 +81,10 @@ kdtree = KDTree(pts; leafsize = 10)
 #five closest points to a randomly chosen point
 idxs, dists = knn(kdtree, SVector{3}[1.44010469e6, 375001.04, 846.32], 5, true)
 
+using AcceleratedArrays
+
+#add secondary acceleration index
+acc_pts = accelerate(pts, SortIndex)
 
 ... more to come?
 ```

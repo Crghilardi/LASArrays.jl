@@ -95,7 +95,8 @@ function get_transform(io::Stream{format"LAS"})
 
     transform = AffineMap(Diagonal(SA_F64[read(io, Float64) 0 0; 0 read(io, Float64) 0; 0 0 read(io, Float64)]), SA_F64[read(io, Float64), read(io, Float64), read(io, Float64)])
 
-    return transform
+    inverse_transform = (x->round.(Int32,x)) ∘ inv(transform)
+    return transform, inverse_transform
 end
 
 function pointformat(io::Stream{format"LAS"})
@@ -127,13 +128,13 @@ function load(s::Stream{format"LAS"}, field::Symbol)
         error("Field not part of LAS Point Data Records Format $format")
     elseif field == :coordinates
         coordinates = []
-        transform = get_transform(s)
+        transform,inverse = get_transform(s)
         seek(s, point_seek)
         while !eof(s)
             push!(coordinates, [read(s, Int32), read(s, Int32), read(s, Int32)])
             skip(s, calculate_offset(format, :coordinates))
         end
-        coordinates_mapped = mappedarray(transform, coordinates)
+        coordinates_mapped = mappedarray(transform, inverse, coordinates)
         return coordinates_mapped
     else
         offset = calculate_offset(format, field)
